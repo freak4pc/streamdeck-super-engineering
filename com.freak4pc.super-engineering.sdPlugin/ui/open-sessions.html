@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>super.engineering Settings</title>
+    <script src="sdpi-components.js"></script>
+    <style>
+        body {
+            visibility: hidden;
+        }
+
+        body.ready {
+            visibility: visible;
+        }
+
+        .status {
+            box-sizing: border-box;
+            width: 100%;
+            padding: 7px 9px;
+            border: 1px solid #4b4b4b;
+            border-radius: 4px;
+            color: #d8d8d8;
+            font: 11px/1.35 -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        .status + .status {
+            margin-top: 6px;
+        }
+
+        .status::before {
+            display: inline-block;
+            width: 7px;
+            height: 7px;
+            margin-right: 7px;
+            border-radius: 50%;
+            background: #8b929d;
+            content: "";
+        }
+
+        .status.ready::before {
+            background: #42d392;
+        }
+
+        .status.warning::before {
+            background: #f5b942;
+        }
+
+        .status.error::before {
+            background: #ff6675;
+        }
+
+        .hint {
+            color: #a9a9a9;
+            font: 11px/1.4 -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+    </style>
+</head>
+
+<body>
+    <sdpi-item label="Connection">
+        <div>
+            <div id="sc-status" class="status" role="status" aria-live="polite">
+                Checking super.engineering…
+            </div>
+            <div id="github-status" class="status" role="status" aria-live="polite">
+                Checking optional GitHub integration…
+            </div>
+        </div>
+    </sdpi-item>
+
+    <sdpi-item label="sc CLI">
+        <sdpi-textfield
+            setting="scPath"
+            global
+            required
+            value="~/.superconductor/bin/sc">
+        </sdpi-textfield>
+    </sdpi-item>
+
+    <sdpi-item label="GitHub CLI">
+        <sdpi-textfield
+            setting="ghPath"
+            global
+            placeholder="Auto-detect">
+        </sdpi-textfield>
+    </sdpi-item>
+
+    <sdpi-item label="Fallback refresh">
+        <sdpi-range
+            setting="pollIntervalSeconds"
+            global
+            min="10"
+            max="120"
+            step="5"
+            default="15"
+            showlabels>
+        </sdpi-range>
+    </sdpi-item>
+
+    <sdpi-item>
+        <sdpi-button id="test-connection">Test connection</sdpi-button>
+    </sdpi-item>
+
+    <sdpi-item label="Setup">
+        <div class="hint">
+            Add Session Slot to as many LCD keys as you want. Slots adapt to the current device and
+            fill in visual order. Add Previous Sessions and Next Sessions when you need paging.
+        </div>
+    </sdpi-item>
+
+    <sdpi-item>
+        <sdpi-button id="open-help">Setup guide</sdpi-button>
+    </sdpi-item>
+
+    <script>
+        document.body.classList.add("ready");
+
+        const streamDeckClient = window.SDPIComponents?.streamDeckClient;
+        if (!streamDeckClient) {
+            document.getElementById("sc-status").textContent =
+                "Unable to load Stream Deck settings components.";
+            document.getElementById("sc-status").className = "status error";
+            document.getElementById("github-status").hidden = true;
+        } else {
+            initializePropertyInspector(streamDeckClient);
+        }
+
+        function initializePropertyInspector(client) {
+            const scStatus = document.getElementById("sc-status");
+            const githubStatus = document.getElementById("github-status");
+            const testConnection = document.getElementById("test-connection");
+            const openHelp = document.getElementById("open-help");
+
+            function setStatus(element, state, message) {
+                element.className = `status ${state}`;
+                element.textContent = message;
+            }
+
+            function requestHealth() {
+                setStatus(scStatus, "", "Checking super.engineering…");
+                setStatus(githubStatus, "", "Checking optional GitHub integration…");
+                client.send("sendToPlugin", { event: "checkHealth" });
+            }
+
+            client.sendToPropertyInspector.subscribe((event) => {
+                if (event.payload?.event !== "integrationHealth") {
+                    return;
+                }
+
+                const { sc, github } = event.payload.health;
+                setStatus(
+                    scStatus,
+                    sc.state === "ready" ? "ready" : sc.state === "offline" ? "warning" : "error",
+                    sc.message,
+                );
+                setStatus(
+                    githubStatus,
+                    github.state === "ready" ? "ready" : "warning",
+                    github.message,
+                );
+            });
+
+            testConnection.addEventListener("click", requestHealth);
+            openHelp.addEventListener("click", () => {
+                client.send("openUrl", {
+                    url: "https://github.com/freak4pc/streamdeck-super-engineering#setup",
+                });
+            });
+
+            requestHealth();
+        }
+    </script>
+</body>
+
+</html>

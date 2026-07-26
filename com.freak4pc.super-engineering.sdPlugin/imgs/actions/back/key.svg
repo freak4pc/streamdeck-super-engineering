@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 144 144">
+  <rect width="144" height="144" rx="18" fill="#21242a"/>
+  <rect x="1" y="1" width="142" height="142" rx="17" fill="none" stroke="#3b404a" stroke-width="2"/>
+  <path d="m74 38-31 31 31 31M45 69h55" fill="none" stroke="#f7f8fa" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="72" y="125" text-anchor="middle" fill="#9ba3b2" font-family="-apple-system, sans-serif" font-size="12" font-weight="700">BACK</text>
+</svg>

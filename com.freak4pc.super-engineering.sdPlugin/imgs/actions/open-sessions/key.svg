@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 144 144">
+  <rect width="144" height="144" rx="18" fill="#111317"/>
+  <rect x="1" y="1" width="142" height="142" rx="17" fill="none" stroke="#343944" stroke-width="2"/>
+  <path d="M31 68c14-35 27-35 41 0s27 35 41 0" fill="none" stroke="#fff" stroke-width="10" stroke-linecap="round"/>
+  <text x="72" y="119" text-anchor="middle" fill="#9ba3b2" font-family="-apple-system, sans-serif" font-size="13" font-weight="700" letter-spacing="1.5">SESSIONS</text>
+</svg>

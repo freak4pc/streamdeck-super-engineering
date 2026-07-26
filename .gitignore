@@ -1,0 +1,10 @@
+.DS_Store
+node_modules/
+npm-debug.log*
+*.streamDeckPlugin
+dist/
+marketplace/media/sources/
+
+# Generated plugin output and local runtime logs.
+com.freak4pc.super-engineering.sdPlugin/bin/plugin.js
+com.freak4pc.super-engineering.sdPlugin/logs/

@@ -1,0 +1,125 @@
+{
+	"$schema": "https://schemas.elgato.com/streamdeck/plugins/manifest.json",
+	"Name": "super.engineering",
+	"Version": "1.0.0.0",
+	"Author": "Shai Mishali",
+	"Actions": [
+		{
+			"Name": "Open Sessions",
+			"UUID": "com.freak4pc.super-engineering.open-sessions",
+			"Icon": "imgs/actions/open-sessions/icon",
+			"Tooltip": "Open super.engineering and refresh visible session keys.",
+			"PropertyInspectorPath": "ui/open-sessions.html",
+			"Controllers": [
+				"Keypad"
+			],
+			"SupportedInMultiActions": true,
+			"SupportedInKeyLogicActions": true,
+			"UserTitleEnabled": false,
+			"States": [
+				{
+					"Image": "imgs/actions/open-sessions/key",
+					"TitleAlignment": "middle"
+				}
+			]
+		},
+		{
+			"Name": "Session Slot",
+			"UUID": "com.freak4pc.super-engineering.session-slot",
+			"Icon": "imgs/actions/session/icon",
+			"Tooltip": "A live super.engineering session slot.",
+			"Controllers": [
+				"Keypad"
+			],
+			"SupportedInMultiActions": false,
+			"SupportedInKeyLogicActions": false,
+			"UserTitleEnabled": false,
+			"States": [
+				{
+					"Image": "imgs/actions/session/key",
+					"TitleAlignment": "middle"
+				}
+			]
+		},
+		{
+			"Name": "Previous Sessions",
+			"UUID": "com.freak4pc.super-engineering.previous-sessions",
+			"Icon": "imgs/actions/previous/icon",
+			"Tooltip": "Show the previous page of super.engineering sessions.",
+			"Controllers": [
+				"Keypad"
+			],
+			"SupportedInMultiActions": false,
+			"SupportedInKeyLogicActions": false,
+			"UserTitleEnabled": false,
+			"States": [
+				{
+					"Image": "imgs/actions/previous/key",
+					"TitleAlignment": "middle"
+				}
+			]
+		},
+		{
+			"Name": "Next Sessions",
+			"UUID": "com.freak4pc.super-engineering.next-sessions",
+			"Icon": "imgs/actions/next/icon",
+			"Tooltip": "Show the next page of super.engineering sessions.",
+			"Controllers": [
+				"Keypad"
+			],
+			"SupportedInMultiActions": false,
+			"SupportedInKeyLogicActions": false,
+			"UserTitleEnabled": false,
+			"States": [
+				{
+					"Image": "imgs/actions/next/key",
+					"TitleAlignment": "middle"
+				}
+			]
+		},
+		{
+			"Name": "Back",
+			"UUID": "com.freak4pc.super-engineering.back",
+			"Icon": "imgs/actions/back/icon",
+			"Tooltip": "Return to the previously active Stream Deck profile.",
+			"Controllers": [
+				"Keypad"
+			],
+			"SupportedInMultiActions": false,
+			"SupportedInKeyLogicActions": false,
+			"UserTitleEnabled": false,
+			"States": [
+				{
+					"Image": "imgs/actions/back/key",
+					"TitleAlignment": "middle"
+				}
+			]
+		}
+	],
+	"Category": "super.engineering",
+	"CategoryIcon": "imgs/plugin/category-icon",
+	"CodePath": "bin/plugin.js",
+	"Description": "Browse, activate, and safely remove super.engineering sessions from Stream Deck app devices with LCD keys.",
+	"Icon": "imgs/plugin/marketplace",
+	"SDKVersion": 3,
+	"Software": {
+		"MinimumVersion": "7.1"
+	},
+	"OS": [
+		{
+			"Platform": "mac",
+			"MinimumVersion": "14"
+		}
+	],
+	"Nodejs": {
+		"Version": "24"
+	},
+	"ApplicationsToMonitor": {
+		"mac": [
+			"com.zarifpour.superconductor"
+		]
+	},
+	"SupportURL": "https://github.com/freak4pc/streamdeck-super-engineering/issues",
+	"URL": "https://super.engineering",
+	"UUID": "com.freak4pc.super-engineering"
+}

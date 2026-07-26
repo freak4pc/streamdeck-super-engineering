@@ -1,0 +1,46 @@
+{
+    "name": "streamdeck-super-engineering",
+    "version": "1.0.0",
+    "description": "A Stream Deck plugin for browsing and controlling super.engineering sessions.",
+    "private": true,
+    "type": "module",
+    "engines": {
+        "node": ">=24"
+    },
+    "scripts": {
+        "build": "rollup -c",
+        "check": "npm run typecheck && npm test && npm run verify:version && npm run build && npm run validate",
+        "marketplace:assets": "node --import tsx scripts/generate-marketplace-assets.ts",
+        "pack": "npm run check && streamdeck pack com.freak4pc.super-engineering.sdPlugin --output dist --force --no-update-check",
+        "test": "node --import tsx --test tests/**/*.test.ts",
+        "typecheck": "tsc --noEmit",
+        "validate": "streamdeck validate com.freak4pc.super-engineering.sdPlugin --no-update-check",
+        "verify:version": "node scripts/verify-release-version.mjs",
+        "watch": "rollup -c -w --watch.onEnd=\"streamdeck restart com.freak4pc.super-engineering\""
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/freak4pc/streamdeck-super-engineering.git"
+    },
+    "bugs": {
+        "url": "https://github.com/freak4pc/streamdeck-super-engineering/issues"
+    },
+    "homepage": "https://github.com/freak4pc/streamdeck-super-engineering#readme",
+    "devDependencies": {
+        "@elgato/cli": "^1.7.4",
+        "@rollup/plugin-commonjs": "^29.0.2",
+        "@rollup/plugin-node-resolve": "^16.0.3",
+        "@rollup/plugin-terser": "^1.0.0",
+        "@rollup/plugin-typescript": "^12.1.0",
+        "@tsconfig/node20": "^20.1.2",
+        "@types/node": "~24.1.0",
+        "rollup": "^4.0.2",
+        "tslib": "^2.6.2",
+        "tsx": "^4.20.6",
+        "typescript": "^5.9.3"
+    },
+    "dependencies": {
+        "@elgato/streamdeck": "^2.1.0"
+    },
+    "license": "MIT"
+}
