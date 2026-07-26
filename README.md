@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="marketplace/media/app-icon.png" alt="super.engineering plugin icon" width="112">
+  <img src="marketplace/media/readme-icon.png" alt="super.engineering plugin icon" width="144">
   <h1>super.engineering for Stream Deck</h1>
   <p>See, focus, and safely clean up your super.engineering sessions without leaving the keyboard.</p>
   <p>

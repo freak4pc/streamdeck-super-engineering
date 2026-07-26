@@ -28,6 +28,7 @@ await mkdir(sourceDirectory, { recursive: true });
 const back = dataUrl(
 	await readFile("com.freak4pc.super-engineering.sdPlugin/imgs/actions/back/key.svg"),
 );
+const appIcon = dataUrl(await readFile("marketplace/media/app-icon.png"), "image/png");
 
 const sessions = [
 	session("main", "APP", "idle", 0, 0, true),
@@ -55,10 +56,36 @@ const sessionImages = sessions.map((value) => renderSessionImage(value));
 const nextImage = renderNavigationImage(1, 0, 3, true);
 
 // The app icon, Marketplace thumbnail, and GitHub social preview use curated campaign artwork.
-// Keep this generator focused on reproducible product screenshots.
+// Derive the README crop without modifying that source, then generate reproducible screenshots.
+await generateReadmeIcon();
 await generate("gallery-live-grid", liveGridSvg());
 await generate("gallery-device-layouts", deviceLayoutsSvg());
 await generate("gallery-session-states", sessionStatesSvg());
+
+async function generateReadmeIcon(): Promise<void> {
+	const width = 288;
+	const height = 216;
+	const source = path.join(sourceDirectory, "readme-icon.svg");
+	const output = path.join(outputDirectory, "readme-icon.png");
+	const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
+		<defs>
+			<clipPath id="rounded">
+				<rect width="${width}" height="${height}" rx="34"/>
+			</clipPath>
+		</defs>
+		<image href="${appIcon}" x="0" y="-36" width="288" height="288" clip-path="url(#rounded)"/>
+	</svg>`;
+	await writeFile(source, svg, "utf8");
+	execFileSync(converter!, [
+		"-w",
+		String(width),
+		"-h",
+		String(height),
+		"-o",
+		output,
+		source,
+	]);
+}
 
 function liveGridSvg(): string {
 	return canvas(`
@@ -277,8 +304,8 @@ async function generate(name: string, svg: string): Promise<void> {
 	]);
 }
 
-function dataUrl(value: Buffer): string {
-	return `data:image/svg+xml;base64,${value.toString("base64")}`;
+function dataUrl(value: Buffer, mediaType = "image/svg+xml"): string {
+	return `data:${mediaType};base64,${value.toString("base64")}`;
 }
 
 function session(
