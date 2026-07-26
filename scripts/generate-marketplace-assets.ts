@@ -87,7 +87,7 @@ function deviceLayoutsSvg(): string {
 		${text("Built for every key layout.", 110, 150, 58, "#ffffff", 820)}
 		${text("Each connected device gets its own slots and page.", 114, 210, 27, "#a7a5b6", 500)}
 		${layoutCard("MINI", 105, 300, 3, 2, 112, 14)}
-		${layoutCard("STREAM DECK", 620, 300, 5, 3, 72, 10)}
+		${layoutCard("STREAM DECK", 620, 300, 5, 3, 72, 10, 8)}
 		${layoutCard("XL", 1_160, 300, 8, 4, 50, 7)}
 	`);
 }
@@ -167,13 +167,17 @@ function layoutCard(
 	rows: number,
 	keySize: number,
 	gap: number,
+	selectedIndex?: number,
 ): string {
 	const padding = 22;
 	const width = columns * keySize + (columns - 1) * gap + padding * 2;
 	const height = rows * keySize + (rows - 1) * gap + padding * 2;
 	const images = Array.from(
 		{ length: columns * rows },
-		(_, index) => sessionImages[index % sessionImages.length],
+		(_, index) => renderSessionImage({
+			...sessions[index % sessions.length],
+			isSelected: index === selectedIndex,
+		}),
 	);
 	return `<g>
 		<rect x="${x}" y="${y}" width="${width}" height="${height + 94}" rx="34" fill="#171923" stroke="#343746" stroke-width="3"/>
