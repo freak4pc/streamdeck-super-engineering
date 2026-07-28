@@ -39,6 +39,8 @@
 - [ ] Check that **super.engineering** is available as a Marketplace plugin name.
 - [x] Create a 288 × 288 Marketplace App icon.
 - [x] Create a 1920 × 960 thumbnail and three gallery images.
+- [x] Inspect media at full resolution for text collisions and boundary overflows.
+- [x] Confirm repeated device frames and captions share common baselines.
 - [x] Prepare description, release notes, requirements, and additional links in `marketplace/metadata.md`.
 - [x] Use `CHANGELOG.md` for release notes.
 - [ ] Upload the validated `.streamDeckPlugin` in Maker Console and complete review metadata.

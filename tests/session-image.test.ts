@@ -13,7 +13,9 @@ test("session artwork bounds long titles and project names", () => {
 	assert.doesNotMatch(markup, /extraordinarilylongword/);
 	assert.match(markup, /extraordinari…/);
 	assert.match(markup, /followed by…/);
-	assert.match(markup, /A-VERY-L…/);
+	assert.match(markup, /A-VERY…/);
+	assert.match(markup, /<text x="14" y="123"[^>]*font-size="10"/);
+	assert.match(markup, /<rect x="78" y="108" width="56" height="22"/);
 });
 
 test("session artwork escapes XML and removes invalid control characters", () => {

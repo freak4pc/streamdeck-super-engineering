@@ -42,9 +42,9 @@ telemetry, and uses only public Stream Deck SDK APIs.
 
 ## Release notes
 
-Initial release with live sidebar sessions, one-press activation, safe worktree deletion, agent and
-pull request states, connection diagnostics, adaptive multi-device layouts, and independent
-per-device pagination.
+Initial Marketplace release with live sidebar sessions, one-press activation, safe worktree
+deletion, agent and pull request states, connection diagnostics, adaptive multi-device layouts, and
+independent per-device pagination. Version 1.0.1 improves session-key spacing and legibility.
 
 ## Additional links
 
@@ -63,8 +63,8 @@ per-device pagination.
 | App icon | `media/app-icon.png` (288 × 288 PNG) |
 | Thumbnail | `media/thumbnail.png` (1920 × 960 PNG) |
 | Gallery item 1 | `media/gallery-live-grid.png` (1920 × 960 PNG) |
-| Gallery item 2 | `media/gallery-device-layouts.png` (1920 × 960 PNG) |
-| Gallery item 3 | `media/gallery-session-states.png` (1920 × 960 PNG) |
+| Gallery item 2 | `media/gallery-session-states.png` (1920 × 960 PNG) |
+| Gallery item 3 | `media/gallery-device-layouts.png` (1920 × 960 PNG) |
 
 For the first release, leave automatic publication after approval off so the approved listing can
 receive one final visual and link check before it goes live.

@@ -4,7 +4,7 @@ const BACKGROUND = "#16181c";
 const BORDER = "#30343b";
 const MUTED = "#8d96a5";
 const TEXT = "#f7f8fa";
-const PROJECT_CHARACTER_LIMIT = 9;
+const PROJECT_CHARACTER_LIMIT = 7;
 const TITLE_CHARACTER_LIMIT = 14;
 
 export function renderSessionImage(
@@ -30,9 +30,9 @@ export function renderSessionImage(
 		${renderTopRightStatus(session, statusColor)}
 		<text x="14" y="62" fill="${TEXT}" font-size="18" font-weight="700">${escapeXml(firstLine)}</text>
 		${secondLine ? `<text x="14" y="84" fill="${TEXT}" font-size="18" font-weight="700">${escapeXml(secondLine)}</text>` : ""}
-		<text x="14" y="124" fill="${MUTED}" font-size="12" font-weight="700" letter-spacing=".8">${escapeXml(truncate(session.projectName.toUpperCase(), PROJECT_CHARACTER_LIMIT))}</text>
-		<rect x="72" y="108" width="62" height="22" rx="11" fill="${statusColor}" fill-opacity=".14" stroke="${statusColor}" stroke-opacity=".55"/>
-		<text x="103" y="123" text-anchor="middle" fill="${statusColor}" font-size="10" font-weight="800" letter-spacing=".4">${statusLabel}</text>
+		<text x="14" y="123" fill="${MUTED}" font-size="10" font-weight="750" letter-spacing=".5">${escapeXml(truncate(session.projectName.toUpperCase(), PROJECT_CHARACTER_LIMIT))}</text>
+		<rect x="78" y="108" width="56" height="22" rx="11" fill="${statusColor}" fill-opacity=".14" stroke="${statusColor}" stroke-opacity=".55"/>
+		<text x="106" y="123" text-anchor="middle" fill="${statusColor}" font-size="9" font-weight="800" letter-spacing=".35">${statusLabel}</text>
 	`);
 }
 

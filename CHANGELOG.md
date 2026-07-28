@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.1 — 2026-07-28
+
+- Prevent project names and agent-state badges from colliding on session keys.
+- Improve key legibility with clearer spacing and typography.
+
 ## 1.0.0 — 2026-07-23
 
 - Mirror visible sessions in exact super.engineering sidebar order using `sc` API v21.

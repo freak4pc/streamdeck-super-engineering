@@ -5,7 +5,6 @@ import path from "node:path";
 
 import {
 	renderDeleteConfirmationImage,
-	renderNavigationImage,
 	renderSessionImage,
 } from "../src/sessions/session-image";
 import type { AgentState, PullRequest, SuperSession } from "../src/sessions/session";
@@ -25,9 +24,6 @@ if (!converter) {
 
 await mkdir(sourceDirectory, { recursive: true });
 
-const back = dataUrl(
-	await readFile("com.freak4pc.super-engineering.sdPlugin/imgs/actions/back/key.svg"),
-);
 const appIcon = dataUrl(await readFile("marketplace/media/app-icon.png"), "image/png");
 
 const sessions = [
@@ -53,7 +49,6 @@ const sessions = [
 	session("Search indexing", "API", "idle", 12, 1),
 ];
 const sessionImages = sessions.map((value) => renderSessionImage(value));
-const nextImage = renderNavigationImage(1, 0, 3, true);
 
 // The app icon, Marketplace thumbnail, and GitHub social preview use curated campaign artwork.
 // Derive the README crop without modifying that source, then generate reproducible screenshots.
@@ -89,10 +84,9 @@ async function generateReadmeIcon(): Promise<void> {
 
 function liveGridSvg(): string {
 	return canvas(`
-		${glow(1_400, 470, 720, "#2ccf9f", .12)}
-		${text("The sidebar, live on your desk.", 110, 150, 58, "#ffffff", 820)}
+		${text("The sidebar, live on your desk.", 110, 150, 58, "#f7f6fb", 820)}
 		${text("Titles and order come directly from super.engineering.", 114, 210, 27, "#a7a5b6", 500)}
-		${deck(180, 300, 4, 2, 210, 28, [
+		${deck(130, 310, 4, 2, 200, 24, [
 			sessionImages[0],
 			sessionImages[1],
 			sessionImages[2],
@@ -102,20 +96,19 @@ function liveGridSvg(): string {
 			sessionImages[6],
 			sessionImages[7],
 		])}
-		${feature("LIVE", "Agent and PR changes update automatically", 1_210, 350, "#49e2a5")}
-		${feature("FOCUS", "One press activates the exact session", 1_210, 485, "#7d69ff")}
-		${feature("MATCH", "Selection follows changes made in the App", 1_210, 620, "#5b9dff")}
+		${feature("LIVE UPDATES", "Agent and PR state", 1_210, 390, "#49e2a5")}
+		${feature("ONE-KEY FOCUS", "Press to activate", 1_210, 535, "#8a72ff")}
+		${feature("ALWAYS IN SYNC", "Selection follows the App", 1_210, 680, "#5b9dff")}
 	`);
 }
 
 function deviceLayoutsSvg(): string {
 	return canvas(`
-		${glow(960, 560, 880, "#6f45ff", .16)}
-		${text("Built for every key layout.", 110, 150, 58, "#ffffff", 820)}
-		${text("Each connected device gets its own slots and page.", 114, 210, 27, "#a7a5b6", 500)}
-		${layoutCard("MINI", 105, 300, 3, 2, 112, 14)}
-		${layoutCard("STREAM DECK", 620, 300, 5, 3, 72, 10, 8)}
-		${layoutCard("XL", 1_160, 300, 8, 4, 50, 7)}
+		${text("Built for every key layout.", 110, 150, 58, "#f7f6fb", 820)}
+		${text("Session slots adapt independently on every connected device.", 114, 210, 27, "#a7a5b6", 500)}
+		${layoutDevice("MINI", "6 LCD KEYS", 90, 330, 420, 270, 3, 2)}
+		${layoutDevice("STREAM DECK", "15 LCD KEYS", 590, 330, 500, 270, 5, 3, 7)}
+		${layoutDevice("XL", "32 LCD KEYS", 1_170, 330, 650, 270, 8, 4)}
 	`);
 }
 
@@ -127,14 +120,13 @@ function sessionStatesSvg(): string {
 	const deleting = renderDeleteConfirmationImage(sessions[5]);
 
 	return canvas(`
-		${glow(960, 620, 900, "#ff7a8c", .08)}
-		${text("Everything important, at a glance.", 110, 150, 58, "#ffffff", 820)}
+		${text("Everything important, at a glance.", 110, 150, 58, "#f7f6fb", 820)}
 		${text("Status is readable before you reach for the key.", 114, 210, 27, "#a7a5b6", 500)}
-		${stateCard(waiting, "WAITING", "Needs your attention", 125, 325, "#f5a623")}
-		${stateCard(working, "WORKING", "Agent is running", 475, 325, "#8066ff")}
-		${stateCard(merged, "MERGED", "PR lifecycle included", 825, 325, "#a371f7")}
-		${stateCard(selected, "SELECTED", "Strong active frame", 1_175, 325, "#5b9dff")}
-		${stateCard(deleting, "SAFE DELETE", "Hold, then confirm", 1_525, 325, "#ff6675")}
+		${stateExample(waiting, "WAITING", "Needs attention", 102, 320, "#f5a623")}
+		${stateExample(working, "WORKING", "Agent running", 454, 320, "#8066ff")}
+		${stateExample(merged, "MERGED", "PR lifecycle", 806, 320, "#a371f7")}
+		${stateExample(selected, "SELECTED", "Active session", 1_158, 320, "#5b9dff")}
+		${stateExample(deleting, "SAFE DELETE", "Hold, then tap", 1_510, 320, "#ff6675")}
 	`);
 }
 
@@ -146,10 +138,9 @@ function canvas(content: string): string {
 				<stop offset=".55" stop-color="#141322"/>
 				<stop offset="1" stop-color="#0b0d13"/>
 			</linearGradient>
-			<filter id="blur"><feGaussianBlur stdDeviation="90"/></filter>
 		</defs>
 		<rect width="${WIDTH}" height="${HEIGHT}" fill="url(#background)"/>
-		<path d="M0 90h1920M0 870h1920" stroke="#ffffff" stroke-opacity=".035"/>
+		<path d="M96 258h1728" stroke="#8a72ff" stroke-opacity=".22"/>
 		<style>text { font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", Arial, sans-serif; }</style>
 		${content}
 	</svg>`;
@@ -186,35 +177,68 @@ function deck(
 	</g>`;
 }
 
-function layoutCard(
+function layoutDevice(
 	label: string,
+	detail: string,
 	x: number,
 	y: number,
+	width: number,
+	height: number,
 	columns: number,
 	rows: number,
-	keySize: number,
-	gap: number,
 	selectedIndex?: number,
 ): string {
-	const padding = 22;
-	const width = columns * keySize + (columns - 1) * gap + padding * 2;
-	const height = rows * keySize + (rows - 1) * gap + padding * 2;
-	const images = Array.from(
-		{ length: columns * rows },
-		(_, index) => renderSessionImage({
-			...sessions[index % sessions.length],
-			isSelected: index === selectedIndex,
-		}),
+	const padding = 28;
+	const gap = 12;
+	const keySize = Math.min(
+		(width - padding * 2 - gap * (columns - 1)) / columns,
+		(height - padding * 2 - gap * (rows - 1)) / rows,
 	);
+	const gridWidth = columns * keySize + (columns - 1) * gap;
+	const gridHeight = rows * keySize + (rows - 1) * gap;
+	const startX = x + (width - gridWidth) / 2;
+	const startY = y + (height - gridHeight) / 2;
+	const keys = Array.from({ length: columns * rows }, (_, index) => {
+		const column = index % columns;
+		const row = Math.floor(index / columns);
+		return layoutKey(
+			startX + column * (keySize + gap),
+			startY + row * (keySize + gap),
+			keySize,
+			index,
+			index === selectedIndex,
+		);
+	}).join("");
 	return `<g>
-		<rect x="${x}" y="${y}" width="${width}" height="${height + 94}" rx="34" fill="#171923" stroke="#343746" stroke-width="3"/>
-		${deck(x, y, columns, rows, keySize, gap, images)}
-		${text(label, x + width / 2, y + height + 62, 21, "#ffffff", 800, 1.5, "middle")}
-		${text(`${columns * rows} LCD KEYS`, x + width / 2, y + height + 89, 14, "#888b9d", 650, 1, "middle")}
+		<rect x="${x}" y="${y}" width="${width}" height="${height}" rx="42" fill="#20222a" stroke="#4c5060" stroke-width="4"/>
+		<rect x="${x + 10}" y="${y + 10}" width="${width - 20}" height="${height - 20}" rx="34" fill="#15171d"/>
+		${keys}
+		${text(label, x + width / 2, 660, 22, "#f7f6fb", 820, 1.4, "middle")}
+		${text(detail, x + width / 2, 692, 14, "#8f92a2", 700, 1, "middle")}
 	</g>`;
 }
 
-function stateCard(
+function layoutKey(
+	x: number,
+	y: number,
+	size: number,
+	index: number,
+	isSelected: boolean,
+): string {
+	const stateColors = ["#42d392", "#8066ff", "#f5a623"];
+	const stateColor = stateColors[index % stateColors.length];
+	const inset = Math.max(2, size * .055);
+	const radius = Math.max(5, size * .15);
+	const markerRadius = Math.max(2.5, size * .055);
+	const selectedStroke = Math.max(3, size * .07);
+	return `<g>
+		<rect x="${x}" y="${y}" width="${size}" height="${size}" rx="${radius}" fill="${isSelected ? "#142033" : "#1b1e24"}" stroke="${isSelected ? "#5b9dff" : "#353942"}" stroke-width="${isSelected ? selectedStroke : Math.max(1.5, size * .025)}"/>
+		<circle cx="${x + size - inset * 2}" cy="${y + inset * 2}" r="${markerRadius}" fill="${stateColor}"/>
+		<rect x="${x + inset * 1.5}" y="${y + size - inset * 2.6}" width="${size * .42}" height="${Math.max(3, size * .055)}" rx="${Math.max(1.5, size * .0275)}" fill="${stateColor}" fill-opacity=".75"/>
+	</g>`;
+}
+
+function stateExample(
 	source: string,
 	label: string,
 	description: string,
@@ -223,10 +247,9 @@ function stateCard(
 	color: string,
 ): string {
 	return `<g>
-		<rect x="${x - 28}" y="${y - 28}" width="300" height="486" rx="34" fill="#171923" stroke="#343746" stroke-width="3"/>
 		${image(source, x, y, 244, 244)}
-		${text(label, x + 122, y + 318, 21, color, 850, 1.5, "middle")}
-		${multiline(description, x + 122, y + 360, 18, "#a7a5b6", 500, 26, "middle")}
+		${text(label, x + 122, y + 322, 21, color, 850, 1.5, "middle")}
+		${text(description, x + 122, y + 366, 18, "#aaa7b7", 540, 0, "middle")}
 	</g>`;
 }
 
@@ -240,7 +263,7 @@ function feature(
 	return `<g>
 		<circle cx="${x}" cy="${y - 10}" r="8" fill="${color}"/>
 		${text(label, x + 28, y, 19, color, 850, 1.6)}
-		${text(description, x + 28, y + 42, 25, "#ffffff", 650)}
+		${text(description, x + 28, y + 42, 25, "#f7f6fb", 650)}
 	</g>`;
 }
 
@@ -259,34 +282,6 @@ function text(
 	anchor: "start" | "middle" = "start",
 ): string {
 	return `<text x="${x}" y="${y}" fill="${color}" font-size="${size}" font-weight="${weight}" letter-spacing="${letterSpacing}" text-anchor="${anchor}">${escapeXml(value)}</text>`;
-}
-
-function multiline(
-	value: string,
-	x: number,
-	y: number,
-	size: number,
-	color: string,
-	weight: number,
-	lineHeight: number,
-	anchor: "start" | "middle",
-): string {
-	const words = value.split(" ");
-	const midpoint = Math.ceil(words.length / 2);
-	return `<text x="${x}" y="${y}" fill="${color}" font-size="${size}" font-weight="${weight}" text-anchor="${anchor}">
-		<tspan x="${x}">${escapeXml(words.slice(0, midpoint).join(" "))}</tspan>
-		<tspan x="${x}" dy="${lineHeight}">${escapeXml(words.slice(midpoint).join(" "))}</tspan>
-	</text>`;
-}
-
-function glow(
-	x: number,
-	y: number,
-	radius: number,
-	color: string,
-	opacity: number,
-): string {
-	return `<circle cx="${x}" cy="${y}" r="${radius}" fill="${color}" opacity="${opacity}" filter="url(#blur)"/>`;
 }
 
 async function generate(name: string, svg: string): Promise<void> {

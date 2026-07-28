@@ -1,6 +1,6 @@
 {
     "name": "streamdeck-super-engineering",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "A Stream Deck plugin for browsing and controlling super.engineering sessions.",
     "private": true,
     "type": "module",
