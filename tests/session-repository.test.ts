@@ -6,7 +6,21 @@ import {
 	extractVisibleItems,
 	parseAgentState,
 	parsePullRequestState,
+	parseWorkspaceWatchEvent,
 } from "../src/sessions/session-repository";
+
+test("workspace watch preserves selection event payloads", () => {
+	assert.deepEqual(
+		parseWorkspaceWatchEvent({
+			item_id: "workspace:project:worktree",
+			revision: 42,
+			type: "selection",
+		}),
+		{ selectedItemId: "workspace:project:worktree", type: "selection" },
+	);
+	assert.deepEqual(parseWorkspaceWatchEvent({ type: "delta" }), { type: "delta" });
+	assert.deepEqual(parseWorkspaceWatchEvent(null), { type: "unknown" });
+});
 
 test("workspace rows preserve the active sidebar's section and project order", () => {
 	const items = extractVisibleItems({

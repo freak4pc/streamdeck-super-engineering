@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Apply workspace selection events directly so the selected marker follows changes made in
+  super.engineering immediately.
+
 ## 1.0.1 — 2026-07-28
 
 - Prevent project names and agent-state badges from colliding on session keys.

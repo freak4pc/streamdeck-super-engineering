@@ -21,7 +21,9 @@ import {
 	type IntegrationErrorCode,
 	type IntegrationHealth,
 	SessionRepository,
+	type WorkspaceWatchEvent,
 } from "./session-repository";
+import { updateSelectedSession } from "./session-selection";
 import type { SuperSession } from "./session";
 
 const DELETE_ARM_TIMEOUT_MILLISECONDS = 5_000;
@@ -68,6 +70,8 @@ export class SessionGridController {
 	private refreshQueued = false;
 	private refreshFailureStartedAt: number | undefined;
 	private refreshRetryTimer: NodeJS.Timeout | undefined;
+	private selectionGeneration = 0;
+	private selectedItemIdFromWatch: string | undefined;
 	private sessions: SuperSession[] = [];
 	private settings: PluginSettings = {};
 	private updateGeneration = 0;
@@ -322,8 +326,13 @@ export class SessionGridController {
 	private async performRefresh(): Promise<void> {
 		streamDeck.logger.debug("Refreshing sessions from sc workspace list");
 		const previousFailureStartedAt = this.refreshFailureStartedAt;
+		const selectionGenerationAtStart = this.selectionGeneration;
 		try {
 			const result = await this.repository.loadSessions();
+			if (this.selectionGeneration !== selectionGenerationAtStart
+				&& this.selectedItemIdFromWatch) {
+				updateSelectedSession(result.sessions, this.selectedItemIdFromWatch);
+			}
 			const previousSessionIds = this.sessions.map((session) => session.id).join("\n");
 			const nextSessionIds = result.sessions.map((session) => session.id).join("\n");
 			const shouldLogAtInfo = !this.hasLoaded
@@ -608,16 +617,30 @@ export class SessionGridController {
 
 		try {
 			this.watchStop = this.repository.watch(
-				() => {
-					this.watchRestartAttempt = 0;
-					this.scheduleWatchRefresh(generation);
-				},
+				(event) => this.handleWatchEvent(generation, event),
 				(error) => this.handleWatchError(generation, error),
 			);
 			streamDeck.logger.info("Watching sc workspace changes");
 		} catch (error) {
 			this.handleWatchError(generation, error instanceof Error ? error : new Error(String(error)));
 		}
+	}
+
+	private handleWatchEvent(generation: number, event: WorkspaceWatchEvent): void {
+		if (generation !== this.updateGeneration) {
+			return;
+		}
+
+		this.watchRestartAttempt = 0;
+		if (event.type === "selection" && event.selectedItemId) {
+			this.selectedItemIdFromWatch = event.selectedItemId;
+			this.selectionGeneration += 1;
+			if (updateSelectedSession(this.sessions, event.selectedItemId)) {
+				this.scheduleLayoutRender();
+			}
+			return;
+		}
+		this.scheduleWatchRefresh(generation);
 	}
 
 	private scheduleWatchRefresh(generation: number): void {

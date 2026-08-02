@@ -47,6 +47,11 @@ export type IntegrationHealth = {
 	};
 };
 
+export type WorkspaceWatchEvent = {
+	selectedItemId?: string;
+	type: string;
+};
+
 type PullRequestCacheEntry = {
 	expiresAt: number;
 	number: number;
@@ -218,7 +223,7 @@ export class SessionRepository {
 		return { errors, sessions };
 	}
 
-	watch(onChange: () => void, onError: (error: Error) => void): () => void {
+	watch(onChange: (event: WorkspaceWatchEvent) => void, onError: (error: Error) => void): () => void {
 		const child = spawn(
 			this.configuration.scPath,
 			["workspace", "watch", "--json"],
@@ -250,8 +255,8 @@ export class SessionRepository {
 					continue;
 				}
 				try {
-					JSON.parse(line);
-					onChange();
+					const payload: unknown = JSON.parse(line);
+					onChange(parseWorkspaceWatchEvent(payload));
 				} catch (error) {
 					fail(new Error(`Invalid workspace watch event: ${errorMessage(error)}`));
 					return;
@@ -480,6 +485,19 @@ export class SessionRepository {
 		this.githubPathPromise ??= findExecutable(githubCandidates(this.configuration.ghPath));
 		return this.githubPathPromise;
 	}
+}
+
+export function parseWorkspaceWatchEvent(payload: unknown): WorkspaceWatchEvent {
+	if (!payload || typeof payload !== "object") {
+		return { type: "unknown" };
+	}
+
+	const record = payload as Record<string, unknown>;
+	const type = typeof record.type === "string" ? record.type : "unknown";
+	if (type === "selection" && typeof record.item_id === "string") {
+		return { selectedItemId: record.item_id, type };
+	}
+	return { type };
 }
 
 export function extractVisibleItems(payload: unknown): WorktreeItem[] {
